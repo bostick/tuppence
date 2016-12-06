@@ -1,0 +1,4 @@
+// the configured options and settings for Tuppence
+#define Tuppence_VERSION_MAJOR @Tuppence_VERSION_MAJOR@
+#define Tuppence_VERSION_MINOR @Tuppence_VERSION_MINOR@
+#define Tuppence_LOOP_LIMIT @Tuppence_LOOP_LIMIT@

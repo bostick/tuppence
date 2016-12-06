@@ -1,0 +1,26 @@
+; sqrt.2p
+; Brenton Bostick
+; Square Root of 17 in Tuppence
+;
+; initial guess of 1
+guess = 1
+; Newton's Method
+guess = (guess + 17/guess) >> 1
+print(guess)
+guess = (guess + 17/guess) >> 1
+print(guess)
+guess = (guess + 17/guess) >> 1
+print(guess)
+guess = (guess + 17/guess) >> 1
+print(guess)
+guess = (guess + 17/guess) >> 1
+print(guess)
+guess = (guess + 17/guess) >> 1
+print(guess)
+
+; print guess as integer with 100 bits of precision
+print(0 # (guess %% 100))
+
+; print result as integer with 100 bits of precision
+result = guess * guess
+print(0 # (result %% 100))
