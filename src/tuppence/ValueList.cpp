@@ -72,8 +72,7 @@ const bool ValueList::isComparable() const {
 
 const bool ValueList::operator==(const ValueList other) const {
 	auto size = Vals.size();
-	auto otherSize = other.Vals.size();
-	assert(size == otherSize && "Sizes not equal");
+	assert(size == other.Vals.size() && "Sizes not equal");
 
 	for (auto i = 0; i < size; i++) {
 		auto Val = Vals[i];
@@ -118,8 +117,7 @@ const bool ValueList::operator==(const ValueList other) const {
 
 const bool ValueList::operator!=(const ValueList other) const {
 	auto size = Vals.size();
-	auto otherSize = other.Vals.size();
-	assert(size == otherSize && "Sizes not equal");
+	assert(size == other.Vals.size() && "Sizes not equal");
 
 	for (auto i = 0; i < size; i++) {
 		auto Val = Vals[i];
