@@ -9,9 +9,6 @@
 
 #include "Parser.h"
 
-#include "llvm/ADT/APInt.h"
-#include "llvm/ADT/StringRef.h"
-
 #include "gtest/gtest.h"
 
 using namespace tuppence;

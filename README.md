@@ -73,7 +73,7 @@ And you can concatenate Rational Words with Finite Words.
 ```
 
 
-## Philospophy
+## Philosophy
 
 Tuppence might seem strange to someone unfamiliar with 2-adic numbers. For example, there are no real numbers in Tuppence. And dividing numbers by 2 is an error.
 
@@ -210,23 +210,16 @@ Tuppence is British slang for "two pence" <a href="https://en.wikipedia.org/wiki
 
 Tuppence uses CMake to generate project files.
 
-Make sure to have a build of LLVM. Follow the instructions for building LLVM with CMake: http://llvm.org/docs/CMake.html
-
 Open CMake and set the source code location to tuppence/src. It is recommended to set the build directory to tuppence/build.
-
-Set the CMake entries as follows:
-
-Name | Value
-------- | -------
-LLVM_DIR | your-llvm-dir/build/lib/cmake/llvm
-GTEST_INCLUDE_DIR | your-llvm-dir/llvm/utils/unittest/googletest/include
-GTEST_LIBRARY | your-llvm-dir/build/Release/lib/gtest.lib
-GTEST_LIBRARY_DEBUG | your-llvm-dir/build/Debug/lib/gtest.lib
-GTEST_MAIN_LIBRARY | your-llvm-dir/build/Release/lib/gtest_main.lib
-GTEST_MAIN_LIBRARY_DEBUG | your-llvm-dir/build/Debug/lib/gtest_main.lib
 
 Then Configure and Generate. The tuppence project is the interpreter and the test project builds an executable named runUnitTests for running the GTest tests for Tuppence.
 
+If you are using Visual Studio and get an error `gtest.lib(gtest-all.obj) : error LNK2038: mismatch detected for 'RuntimeLibrary': value 'MTd_StaticDebug' doesn't match value 'MDd_DynamicDebug'`, make sure to check the gtest > gtest_force_shared_crt option in CMake.
+
 ## Future work
 
-Actual LLVM codegen, Jupyter kernel, Finite Field arithmetic, crit-bit trees, BDDs (binary decision diagrams).
+Jupyter kernel, Finite Field arithmetic, crit-bit trees, BDDs (binary decision diagrams).
+
+
+
+

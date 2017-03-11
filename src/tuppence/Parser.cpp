@@ -13,6 +13,7 @@
 
 #include "llvm/Support/ErrorHandling.h"
 
+#include <cassert>
 #include <iostream>
 
 using namespace tuppence;

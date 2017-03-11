@@ -2,8 +2,6 @@
 #include "Parser.h"
 #include "TuppenceConfig.h"
 
-#include "llvm/Support/ErrorHandling.h"
-
 #include <fstream>
 #include <iostream>
 #include <sstream>
