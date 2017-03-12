@@ -7,15 +7,14 @@ configure_file (
   "${CMAKE_CURRENT_BINARY_DIR}/TuppenceConfig.h"
   )
 
-
 # add the binary tree to the search path for include files
 # so that we will find TuppenceConfig.h
 include_directories("${CMAKE_CURRENT_BINARY_DIR}/")
 
 # find the generated LLVM headers
-include_directories("${CMAKE_CURRENT_BINARY_DIR}/../llvm")
+include_directories("${CMAKE_CURRENT_BINARY_DIR}/../llvm-minimal")
 
-include_directories("../llvm/include")
+include_directories("../llvm-minimal/include")
 
 # add the interpreter
 add_library(tuppencelib
@@ -26,12 +25,10 @@ add_library(tuppencelib
   Parser.cpp
   RationalWord.cpp
   Value.cpp
-  ValueList.cpp
-  ${CMAKE_CURRENT_BINARY_DIR}/TuppenceConfig.h)
+  ValueList.cpp)
 
 add_executable(tuppence
-  Main.cpp
-  ${CMAKE_CURRENT_BINARY_DIR}/TuppenceConfig.h)
+  Main.cpp)
 
 target_link_libraries(tuppencelib llvm-minimal)
 

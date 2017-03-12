@@ -18,7 +18,7 @@
 #Last Changed Rev: 288578
 #Last Changed Date: 2016-12-03 00:35:44 -0500 (Sat, 03 Dec 2016)
 
-project(llvm)
+project(llvm-minimal)
 
 # line 22
 if(NOT DEFINED LLVM_VERSION_MAJOR)
