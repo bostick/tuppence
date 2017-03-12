@@ -1,9 +1,19 @@
-
+# The version of CMake is too old, so try to download a newer one:
 # https://github.com/travis-ci/travis-ci/issues/7437
+#
+# But the version of wget is too old and gives:
+#  ERROR: no certificate subject alternative name matches
+#  requested host name `cmake.org'.
+# To connect to cmake.org insecurely, use `--no-check-certificate'.
+# 
+# So use curl instead:
+# https://github.com/travis-ci/travis-ci/issues/5059
+#
+
 before_install:
   - mkdir $HOME/usr
   - export PATH="$HOME/usr/bin:$PATH"
-  - wget https://cmake.org/files/v3.7/cmake-3.7.2-Linux-x86_64.sh
+  - curl -O https://cmake.org/files/v3.7/cmake-3.7.2-Linux-x86_64.sh
   - chmod +x cmake-3.7.2-Linux-x86_64.sh
   - ./cmake-3.7.2-Linux-x86_64.sh --prefix=$HOME/usr --exclude-subdir --skip-license
 
