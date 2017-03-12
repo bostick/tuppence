@@ -24,10 +24,10 @@ namespace tuppence {
 		const FiniteWord ZERO_1BIT = FiniteWord::FactoryBool((bool)0);
 		const FiniteWord ONE_1BIT = FiniteWord::FactoryBool((bool)1);
 
-		const Symbol SYMBOL_INFINITY = Symbol::Symbol("infinity");
-		const BuiltinFunction BUILTIN_PRINT = BuiltinFunction::BuiltinFunction(&tuppence::eval::print);
-		const BuiltinFunction BUILTIN_EXIT = BuiltinFunction::BuiltinFunction(&tuppence::eval::exit);
-		const BuiltinFunction BUILTIN_RATIONALIZE = BuiltinFunction::BuiltinFunction(&tuppence::eval::rationalize);
+		const Symbol SYMBOL_INFINITY = Symbol("infinity");
+		const BuiltinFunction BUILTIN_PRINT = BuiltinFunction(&tuppence::eval::print);
+		const BuiltinFunction BUILTIN_EXIT = BuiltinFunction(&tuppence::eval::exit);
+		const BuiltinFunction BUILTIN_RATIONALIZE = BuiltinFunction(&tuppence::eval::rationalize);
 
 	}
 
