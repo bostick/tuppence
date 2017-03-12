@@ -2,6 +2,8 @@
 
 A language for 2-adic arithmetic and bit-twiddling.
 
+[![Build Status](https://travis-ci.org/bostick/tuppence.svg?branch=master)](https://travis-ci.org/bostick/tuppence)
+
 Tuppence is an interpreted language.
 
 ```
