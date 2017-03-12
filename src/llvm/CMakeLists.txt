@@ -3,6 +3,21 @@
 
 # It is intended to be able to drop in new versions of the LLVM source as needed (or until the same functionality is provided elsewhere)
 
+
+#brenton@DESKTOP-9DJHPDT:/mnt/c/dev/llvm/llvm$ svn info
+#Path: .
+#Working Copy Root Path: /mnt/c/dev/llvm/llvm
+#URL: http://llvm.org/svn/llvm-project/llvm/trunk
+#Relative URL: ^/llvm/trunk
+#Repository Root: http://llvm.org/svn/llvm-project
+#Repository UUID: 91177308-0d34-0410-b5e6-96231b3b80d8
+#Revision: 288581
+#Node Kind: directory
+#Schedule: normal
+#Last Changed Author: ctopper
+#Last Changed Rev: 288578
+#Last Changed Date: 2016-12-03 00:35:44 -0500 (Sat, 03 Dec 2016)
+
 project(llvm)
 
 # line 22
@@ -35,6 +50,9 @@ set(CMAKE_MODULE_PATH
   
 # line 213
 set(PACKAGE_NAME LLVM)
+
+# line 302
+set(LLVM_MAIN_SRC_DIR     ${CMAKE_CURRENT_SOURCE_DIR}  ) # --src-root
 
 # line 355
 set(LLVM_TARGET_ARCH "host"
@@ -86,6 +104,8 @@ add_library(llvm-minimal
   lib/Support/APInt.cpp
   lib/Support/FoldingSet.cpp
   lib/Support/Debug.cpp
+  lib/Support/Errno.cpp
+  lib/Support/Error.cpp
   lib/Support/ErrorHandling.cpp
   lib/Support/raw_ostream.cpp
   lib/Support/Hashing.cpp

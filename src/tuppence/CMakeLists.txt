@@ -35,6 +35,9 @@ add_executable(tuppence
 
 target_link_libraries(tuppencelib llvm-minimal)
 
+set_property(TARGET tuppencelib PROPERTY CXX_STANDARD 11)
+set_property(TARGET tuppencelib PROPERTY CXX_STANDARD_REQUIRED ON)
+
 target_link_libraries(tuppence tuppencelib)
 
 set_property(TARGET tuppence PROPERTY CXX_STANDARD 11)
