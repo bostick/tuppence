@@ -1,3 +1,8 @@
+language: cpp
+compiler:
+  - clang
+  - gcc
+
 # The version of CMake is too old, so try to download a newer one:
 # https://github.com/travis-ci/travis-ci/issues/7437
 #
@@ -9,6 +14,9 @@
 # So use curl instead:
 # https://github.com/travis-ci/travis-ci/issues/5059
 #
+# Also update GCC because it is too old:
+# https://github.com/travis-ci/travis-ci/issues/1379
+#
 
 before_install:
   - mkdir $HOME/usr
@@ -16,15 +24,18 @@ before_install:
   - curl -O https://cmake.org/files/v3.7/cmake-3.7.2-Linux-x86_64.sh
   - chmod +x cmake-3.7.2-Linux-x86_64.sh
   - ./cmake-3.7.2-Linux-x86_64.sh --prefix=$HOME/usr --exclude-subdir --skip-license
+  - sudo add-apt-repository ppa:ubuntu-toolchain-r/test -y
+  - sudo apt-get update -qq
+  - if [ "$CXX" = "clang++" ]; then sudo apt-get install -qq libstdc++-4.8-dev; fi
+  - if [ "$CXX" = "g++" ]; then sudo apt-get install -qq g++-4.8; fi
+  - if [ "$CXX" = "g++" ]; then export CXX="g++-4.8" CC="gcc-4.8"; fi
 
-language: cpp
-compiler:
-  - clang
-  - gcc
 before_script:
   - mkdir build
   - cd build
+  - cmake --version
   - cmake ../src
+
 script:
   - make
   - cd test
