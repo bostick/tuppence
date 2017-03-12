@@ -58,6 +58,9 @@ set(LLVM_MAIN_SRC_DIR     ${CMAKE_CURRENT_SOURCE_DIR}  ) # --src-root
 set(LLVM_TARGET_ARCH "host"
   CACHE STRING "Set target to use for LLVM JIT or use \"host\" for automatic detection.")
 
+# line 375
+include(AddLLVMDefinitions)
+
 # line 563
 # All options referred to from HandleLLVMOptions have to be specified
 # BEFORE this include, otherwise options will not be correctly set on
