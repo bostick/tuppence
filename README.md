@@ -74,6 +74,12 @@ And you can concatenate Rational Words with Finite Words.
 1/3
 ```
 
+When concatenating words, only 1 Rational Word is allowed, and it must be on the left.
+
+```
+>>> `1` # ...`01`
+Error: Expected FiniteWord: -1/3
+```
 
 ## Philosophy
 
