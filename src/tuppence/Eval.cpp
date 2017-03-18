@@ -686,19 +686,20 @@ const std::shared_ptr<Value> CallExprAST::eval() const {
 	}
 
 	// Look up the name in the global module table.
-	auto BultinCallee = llvm::dyn_cast<BuiltinFunction>(eval::NamedValues[Callee->getName()].get());
-	if (!BultinCallee) {
-		auto UserCalee = llvm::dyn_cast<UserFunction>(eval::NamedValues[Callee->getName()].get());
-		if (!UserCalee) {
-			return LogError("Unknown function referenced:" + Callee->getName());
-		}
-		else {
-			return UserCalee->call(ArgsV);
-		}
+	auto Named = eval::NamedValues[Callee->getName()];
+	if (!Named) {
+		return LogError("Unknown function referenced: " + Callee->getName());
 	}
-	else {
+
+	if (auto BultinCallee = llvm::dyn_cast<BuiltinFunction>(Named.get());) {
 		return BultinCallee->call(ArgsV);
 	}
+
+	if (auto UserCalee = llvm::dyn_cast<UserFunction>(Named.get());) {
+		return UserCalee->call(ArgsV);
+	}
+
+	return LogError("Neither builtin function nor user function: " + Callee->getName());
 }
 
 const std::shared_ptr<Value> IfExprAST::eval() const {

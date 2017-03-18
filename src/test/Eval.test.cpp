@@ -150,3 +150,36 @@ TEST(Eval, ErrorTest1) {
 		ASSERT_TRUE(Evaled == nullptr);
 	}
 }
+
+TEST(Eval, MissingNames) {
+
+	{
+		std::stringstream ss("ecit()\n");
+		Parser P(ss);
+		P.readNextToken();
+		auto Parsed = P.ParseTopLevelExpression();
+		ASSERT_TRUE(Parsed != nullptr);
+		auto Evaled = Parsed->eval();
+		ASSERT_TRUE(Evaled == nullptr);
+	}
+
+	{
+		std::stringstream ss1("a = 1\n");
+		Parser P1(ss1);
+		P1.readNextToken();
+		auto Parsed1 = P1.ParseTopLevelExpression();
+		ASSERT_TRUE(Parsed1 != nullptr);
+		auto Evaled1 = Parsed1->eval();
+		// Error: Unknown function referenced: ecit
+		ASSERT_TRUE(Evaled1 != nullptr);
+
+		std::stringstream ss2("a()\n");
+		Parser P2(ss2);
+		P2.readNextToken();
+		auto Parsed2 = P2.ParseTopLevelExpression();
+		ASSERT_TRUE(Parsed2 != nullptr);
+		auto Evaled2 = Parsed2->eval();
+		// Error: Neither builtin function nor user function: a
+		ASSERT_TRUE(Evaled2 == nullptr);
+	}
+}
