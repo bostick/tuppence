@@ -691,11 +691,11 @@ const std::shared_ptr<Value> CallExprAST::eval() const {
 		return LogError("Unknown function referenced: " + Callee->getName());
 	}
 
-	if (auto BultinCallee = llvm::dyn_cast<BuiltinFunction>(Named.get());) {
+	if (auto BultinCallee = llvm::dyn_cast<BuiltinFunction>(Named.get())) {
 		return BultinCallee->call(ArgsV);
 	}
 
-	if (auto UserCalee = llvm::dyn_cast<UserFunction>(Named.get());) {
+	if (auto UserCalee = llvm::dyn_cast<UserFunction>(Named.get())) {
 		return UserCalee->call(ArgsV);
 	}
 
