@@ -201,7 +201,7 @@ public:
 
   void reset();
 
-  operator bool() const;
+  explicit operator bool() const;
 
   StringRef getName() const { return Name; }
   StringRef getDescription() const { return Description; }
@@ -837,7 +837,6 @@ public:
   typedef OptionValue<DataType> OptVal;
 
 protected:
-  // Workaround Clang PR22793
   ~basic_parser() = default;
 };
 

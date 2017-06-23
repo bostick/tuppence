@@ -12,19 +12,29 @@ configure_file (
 include_directories("${CMAKE_CURRENT_BINARY_DIR}/")
 
 # find the generated LLVM headers
-include_directories("${CMAKE_CURRENT_BINARY_DIR}/../llvm-minimal")
+include_directories("${CMAKE_CURRENT_BINARY_DIR}/../llvm-minimal/include")
 
 include_directories("../llvm-minimal/include")
 
 # add the interpreter
 add_library(tuppencelib
+  Eval.h
   Eval.cpp
+  FiniteWord.h
   FiniteWord.cpp
+  Interpreter.h
+  Interpreter.cpp
+  Lexer.h
   Lexer.cpp
+  Logger.h
   Logger.cpp
+  Parser.h
   Parser.cpp
+  RationalWord.h
   RationalWord.cpp
+  Value.h
   Value.cpp
+  ValueList.h
   ValueList.cpp)
 
 add_executable(tuppence

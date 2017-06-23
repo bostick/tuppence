@@ -4,19 +4,19 @@
 # It is intended to be able to drop in new versions of the LLVM source as needed (or until the same functionality is provided elsewhere)
 
 
-#brenton@DESKTOP-9DJHPDT:/mnt/c/dev/llvm/llvm$ svn info
+#Brentons-MacBook-Pro:llvm brenton$ svn info
 #Path: .
-#Working Copy Root Path: /mnt/c/dev/llvm/llvm
-#URL: http://llvm.org/svn/llvm-project/llvm/trunk
-#Relative URL: ^/llvm/trunk
+#Working Copy Root Path: /Users/brenton/llvm-4.0.1/llvm
+#URL: http://llvm.org/svn/llvm-project/llvm/tags/RELEASE_401/final
+#Relative URL: ^/llvm/tags/RELEASE_401/final
 #Repository Root: http://llvm.org/svn/llvm-project
 #Repository UUID: 91177308-0d34-0410-b5e6-96231b3b80d8
-#Revision: 288581
+#Revision: 306117
 #Node Kind: directory
 #Schedule: normal
-#Last Changed Author: ctopper
-#Last Changed Rev: 288578
-#Last Changed Date: 2016-12-03 00:35:44 -0500 (Sat, 03 Dec 2016)
+#Last Changed Author: tstellar
+#Last Changed Rev: 305825
+#Last Changed Date: 2017-06-20 15:29:32 -0400 (Tue, 20 Jun 2017)
 
 project(llvm-minimal)
 
@@ -28,10 +28,10 @@ if(NOT DEFINED LLVM_VERSION_MINOR)
   set(LLVM_VERSION_MINOR 0)
 endif()
 if(NOT DEFINED LLVM_VERSION_PATCH)
-  set(LLVM_VERSION_PATCH 0)
+  set(LLVM_VERSION_PATCH 1)
 endif()
 if(NOT DEFINED LLVM_VERSION_SUFFIX)
-  set(LLVM_VERSION_SUFFIX svn)
+  set(LLVM_VERSION_SUFFIX "")
 endif()
 
 # line 42
@@ -40,28 +40,40 @@ if (NOT PACKAGE_VERSION)
     "${LLVM_VERSION_MAJOR}.${LLVM_VERSION_MINOR}.${LLVM_VERSION_PATCH}${LLVM_VERSION_SUFFIX}")
 endif()
 
-# line 184
+# line 197
 # Add path for custom modules
 set(CMAKE_MODULE_PATH
   ${CMAKE_MODULE_PATH}
   "${CMAKE_CURRENT_SOURCE_DIR}/cmake"
   "${CMAKE_CURRENT_SOURCE_DIR}/cmake/modules"
   )
-  
-# line 213
+
+# line 226
 set(PACKAGE_NAME LLVM)
+set(PACKAGE_STRING "${PACKAGE_NAME} ${PACKAGE_VERSION}")
+set(PACKAGE_BUGREPORT "http://llvm.org/bugs/")
 
-# line 302
+# line 312
+# Each of them corresponds to llvm-config's.
+set(LLVM_TOOLS_BINARY_DIR ${LLVM_RUNTIME_OUTPUT_INTDIR}) # --bindir
+set(LLVM_LIBRARY_DIR      ${LLVM_LIBRARY_OUTPUT_INTDIR}) # --libdir
 set(LLVM_MAIN_SRC_DIR     ${CMAKE_CURRENT_SOURCE_DIR}  ) # --src-root
+set(LLVM_MAIN_INCLUDE_DIR ${LLVM_MAIN_SRC_DIR}/include ) # --includedir
+set(LLVM_BINARY_DIR       ${CMAKE_CURRENT_BINARY_DIR}  ) # --prefix
 
-# line 355
+# Note: LLVM_CMAKE_PATH does not include generated files
+set(LLVM_CMAKE_PATH ${LLVM_MAIN_SRC_DIR}/cmake/modules)
+set(LLVM_EXAMPLES_BINARY_DIR ${LLVM_BINARY_DIR}/examples)
+set(LLVM_INCLUDE_DIR ${CMAKE_CURRENT_BINARY_DIR}/include)
+
+# line 368
 set(LLVM_TARGET_ARCH "host"
   CACHE STRING "Set target to use for LLVM JIT or use \"host\" for automatic detection.")
 
-# line 375
+# line 388
 include(AddLLVMDefinitions)
 
-# line 563
+# line 579
 # All options referred to from HandleLLVMOptions have to be specified
 # BEFORE this include, otherwise options will not be correctly set on
 # first cmake run
@@ -81,29 +93,31 @@ message(STATUS "LLVM default target triple: ${LLVM_DEFAULT_TARGET_TRIPLE}")
 
 include(HandleLLVMOptions)
 
-# line 710
+# line 726
 # Configure the three LLVM configuration header files.
 configure_file(
-  include/llvm/Config/config.h.cmake
-  ${CMAKE_CURRENT_BINARY_DIR}/llvm/Config/config.h)
+  ${LLVM_MAIN_INCLUDE_DIR}/llvm/Config/config.h.cmake
+  ${LLVM_INCLUDE_DIR}/llvm/Config/config.h)
 configure_file(
-  include/llvm/Config/llvm-config.h.cmake
-  ${CMAKE_CURRENT_BINARY_DIR}/llvm/Config/llvm-config.h)
+  ${LLVM_MAIN_INCLUDE_DIR}/llvm/Config/llvm-config.h.cmake
+  ${LLVM_INCLUDE_DIR}/llvm/Config/llvm-config.h)
 configure_file(
-  include/llvm/Config/abi-breaking.h.cmake
-  ${CMAKE_CURRENT_BINARY_DIR}/llvm/Config/abi-breaking.h)
+  ${LLVM_MAIN_INCLUDE_DIR}/llvm/Config/abi-breaking.h.cmake
+  ${LLVM_INCLUDE_DIR}/llvm/Config/abi-breaking.h)
 configure_file(
-  include/llvm/Support/DataTypes.h.cmake
-  ${CMAKE_CURRENT_BINARY_DIR}/llvm/Support/DataTypes.h)
-  
-# find the generated LLVM headers
-include_directories("${CMAKE_CURRENT_BINARY_DIR}/")
+  ${LLVM_MAIN_INCLUDE_DIR}/llvm/Support/DataTypes.h.cmake
+  ${LLVM_INCLUDE_DIR}/llvm/Support/DataTypes.h)
+
+#include_directories("${CMAKE_CURRENT_BINARY_DIR}/")
 
 include_directories("include")
 
+include_directories("${LLVM_INCLUDE_DIR}/")
+
 add_library(llvm-minimal
-  ${CMAKE_CURRENT_BINARY_DIR}/llvm/Config/config.h
-  
+  ${LLVM_INCLUDE_DIR}/llvm/Config/config.h
+  ${LLVM_INCLUDE_DIR}/llvm/Config/llvm-config.h
+
   lib/Support/APInt.cpp
   lib/Support/FoldingSet.cpp
   lib/Support/Debug.cpp
@@ -122,7 +136,6 @@ add_library(llvm-minimal
   lib/Support/Path.cpp
   lib/Support/NativeFormatting.cpp
   lib/Support/Process.cpp
-  lib/Support/Atomic.cpp
   lib/Support/Threading.cpp
   lib/Support/StringMap.cpp
   lib/Support/Host.cpp

@@ -1,7 +1,7 @@
 project(runUnitTests)
 
 # find the generated LLVM headers
-include_directories("${CMAKE_CURRENT_BINARY_DIR}/../llvm-minimal")
+include_directories("${CMAKE_CURRENT_BINARY_DIR}/../llvm-minimal/include")
 
 enable_testing()
 
