@@ -12,6 +12,7 @@
 #include "Logger.h"
 #include "TuppenceConfig.h"
 
+#include <algorithm> // for std::find
 #include <cassert>
 #include <sstream>
 #include <vector>
