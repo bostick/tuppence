@@ -119,37 +119,38 @@ add_library(llvm-minimal
   ${LLVM_INCLUDE_DIR}/llvm/Config/llvm-config.h
 
   lib/Support/APInt.cpp
-  lib/Support/FoldingSet.cpp
+  lib/Support/Atomic.cpp
+  lib/Support/circular_raw_ostream.cpp
+  lib/Support/CommandLine.cpp
+  lib/Support/ConvertUTF.cpp
+  lib/Support/ConvertUTFWrapper.cpp
   lib/Support/Debug.cpp
   lib/Support/Errno.cpp
   lib/Support/Error.cpp
   lib/Support/ErrorHandling.cpp
-  lib/Support/raw_ostream.cpp
+  lib/Support/FoldingSet.cpp
   lib/Support/Hashing.cpp
-  lib/Support/StringRef.cpp
-  lib/Support/ManagedStatic.cpp
-  lib/Support/CommandLine.cpp
-  lib/Support/Signals.cpp
-  lib/Support/circular_raw_ostream.cpp
-  lib/Support/Mutex.cpp
-  lib/Support/Twine.cpp
-  lib/Support/Path.cpp
-  lib/Support/NativeFormatting.cpp
-  lib/Support/Process.cpp
-  lib/Support/Threading.cpp
-  lib/Support/StringMap.cpp
   lib/Support/Host.cpp
-  lib/Support/Program.cpp
-  lib/Support/SmallPtrSet.cpp
-  lib/Support/ConvertUTFWrapper.cpp
+  lib/Support/ManagedStatic.cpp
   lib/Support/MemoryBuffer.cpp
-  lib/Support/StringSaver.cpp
-  lib/Support/StringExtras.cpp
-  lib/Support/Triple.cpp
-  lib/Support/ConvertUTF.cpp
-  lib/Support/TargetParser.cpp
+  lib/Support/Mutex.cpp
+  lib/Support/NativeFormatting.cpp
+  lib/Support/Path.cpp
+  lib/Support/Process.cpp
+  lib/Support/Program.cpp
+  lib/Support/raw_ostream.cpp
+  lib/Support/Signals.cpp
+  lib/Support/SmallPtrSet.cpp
   lib/Support/SmallVector.cpp
-  )
+  lib/Support/StringExtras.cpp
+  lib/Support/StringMap.cpp
+  lib/Support/StringRef.cpp
+  lib/Support/StringSaver.cpp
+  lib/Support/TargetParser.cpp
+  lib/Support/Threading.cpp
+  lib/Support/Triple.cpp
+  lib/Support/Twine.cpp
+)
 
 set_property(TARGET llvm-minimal PROPERTY CXX_STANDARD 11)
 set_property(TARGET llvm-minimal PROPERTY CXX_STANDARD_REQUIRED ON)
