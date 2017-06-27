@@ -7,9 +7,9 @@
 //
 //===----------------------------------------------------------------------===//
 
-#ifndef TUPPENCE_LOGGER_H
-#define TUPPENCE_LOGGER_H
+#pragma once
 
+#include <cstddef> // for std::nullptr_t
 #include <string>
 
 namespace tuppence {
@@ -20,5 +20,3 @@ namespace tuppence {
 
 	void LogWarning(std::string Str);
 }
-
-#endif

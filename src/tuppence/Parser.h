@@ -7,16 +7,14 @@
 //
 //===----------------------------------------------------------------------===//
 
-#ifndef TUPPENCE_PARSER_H
-#define TUPPENCE_PARSER_H
+#pragma once
 
 #include "Lexer.h"
 #include "FiniteWord.h"
 #include "RationalWord.h"
+#include "Value.h"
 
-#include "llvm/Support/Casting.h"
-
-#include <memory>
+#include <map>
 #include <string>
 #include <vector>
 
@@ -177,6 +175,8 @@ namespace tuppence {
 		BinaryExprAST(char Op, const std::shared_ptr<ExprAST> LHS, const std::shared_ptr<ExprAST> RHS) :
 			ExprAST(AK_BinaryExpr), Op(Op), LHS(LHS), RHS(RHS) {}
 
+        char getOp() const { return Op; }
+        
 		const std::shared_ptr<ExprAST> getLHS() const {
 			return LHS;
 		}
@@ -444,5 +444,3 @@ namespace tuppence {
 
 	};
 }
-
-#endif

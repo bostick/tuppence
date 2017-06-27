@@ -7,8 +7,7 @@
 //
 //===----------------------------------------------------------------------===//
 
-#ifndef TUPPENCE_LEXER_H
-#define TUPPENCE_LEXER_H
+#pragma once
 
 #include "FiniteWord.h"
 #include "RationalWord.h"
@@ -37,12 +36,13 @@ namespace tuppence {
 		tok_while = -35,
 
 		// operators
-		tok_eqeq = -42,
-		tok_pp = -43,
-		tok_gtgt = -44,
-		tok_gtp = -48,
-		tok_ddd = -50,
-		tok_beq = -51,
+		tok_equal_equal = -42,
+		tok_percent_percent = -43,
+		tok_greater_greater = -44,
+		tok_greater_percent = -48,
+		tok_dot_dot_dot = -50,
+		tok_bang_equal = -51,
+        tok_star_star = -52,
 
 		// var definition
 		tok_var = -60
@@ -71,5 +71,3 @@ namespace tuppence {
 		void throwAwayLine();
 	};
 }
-
-#endif

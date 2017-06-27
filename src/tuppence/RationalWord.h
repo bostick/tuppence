@@ -7,14 +7,9 @@
 //
 //===----------------------------------------------------------------------===//
 
-#ifndef TUPPENCE_RATIONALWORD_H
-#define TUPPENCE_RATIONALWORD_H
+#pragma once
 
 #include "FiniteWord.h"
-#include "Value.h"
-
-#include <string>
-#include <vector>
 
 namespace tuppence {
 
@@ -67,8 +62,6 @@ namespace tuppence {
 		const FiniteWord getTransient() const;
 
 		const std::string string() const override;
-
-		const std::string representation() const;
 
 		const std::string decimal() const;
 
@@ -148,5 +141,3 @@ namespace tuppence {
 	//
 	void PrintTo(const RationalWord& bar, ::std::ostream* os);
 }
-
-#endif

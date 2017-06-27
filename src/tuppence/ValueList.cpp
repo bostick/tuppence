@@ -15,6 +15,8 @@
 #include "llvm/Support/Casting.h"
 
 #include <sstream>
+#include <string>
+#include <cassert>
 
 namespace tuppence {
 

@@ -7,14 +7,14 @@
 //
 //===----------------------------------------------------------------------===//
 
-#ifndef TUPPENCE_FINITEWORD_H
-#define TUPPENCE_FINITEWORD_H
+#pragma once
 
 #include "Value.h"
 
 #include <memory>
 #include <string>
-#include <vector>
+
+#include <cstddef> // for size_t
 
 // Forward declare APInt (and use pointers to APInt) to prevent any dependencies on APInt creeping out of FiniteWord
 namespace llvm {
@@ -56,8 +56,6 @@ namespace tuppence {
 		const size_t getSize() const;
 
 		const std::string string() const override;
-
-		const std::string representation() const;
 
 		const std::string bits() const;
 
@@ -148,5 +146,3 @@ namespace tuppence {
 	void PrintTo(const FiniteWord& bar, ::std::ostream* os);
 
 }
-
-#endif

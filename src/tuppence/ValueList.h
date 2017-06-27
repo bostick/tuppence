@@ -7,13 +7,13 @@
 //
 //===----------------------------------------------------------------------===//
 
-#ifndef TUPPENCE_VALUELIST_H
-#define TUPPENCE_VALUELIST_H
+#pragma once
 
 #include "FiniteWord.h"
 #include "Value.h"
 
-#include <string>
+#include <memory>
+#include <vector>
 
 namespace tuppence {
 
@@ -63,5 +63,3 @@ namespace tuppence {
 		}
 	};
 }
-
-#endif

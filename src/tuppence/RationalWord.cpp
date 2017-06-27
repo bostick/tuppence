@@ -12,9 +12,9 @@
 #include "Logger.h"
 #include "TuppenceConfig.h"
 
-#include <algorithm>
 #include <cassert>
 #include <sstream>
+#include <vector>
 
 namespace tuppence {
 
@@ -83,17 +83,6 @@ RationalWord& RationalWord::operator=(RationalWord&& other) {
 	transient = other.transient;
 	// nothing to clear from other
 	return *this;
-}
-
-const std::string RationalWord::representation() const {
-	auto PeriodStr = period.bits();
-	auto TransientStr = transient.bits();
-
-	std::stringstream ss;
-	ss << PeriodStr;
-	ss << "'";
-	ss << TransientStr;
-	return ss.str();
 }
 
 void RationalWord::calculateFraction(RationalWord& Numerator, RationalWord& Denominator) const {

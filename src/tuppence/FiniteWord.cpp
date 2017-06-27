@@ -162,14 +162,6 @@ const size_t FiniteWord::getSize() const {
 	return size;
 }
 
-const std::string FiniteWord::representation() const {
-	std::stringstream ss;
-	ss << "`";
-	ss << bits();
-	ss << "`";
-	return ss.str();
-}
-
 const std::string FiniteWord::bits() const {
 	std::stringstream ss;
 	for (auto i = 0; i < size; i++) {
@@ -198,7 +190,12 @@ const std::string FiniteWord::decimalSigned() const {
 }
 
 const std::string FiniteWord::string() const {
-	return representation();
+//	return representation();
+    std::stringstream ss;
+    ss << "`";
+    ss << bits();
+    ss << "`";
+    return ss.str();
 }
 
 const bool FiniteWord::get(size_t index) const {

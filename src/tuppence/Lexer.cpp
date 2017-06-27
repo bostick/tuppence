@@ -13,7 +13,6 @@
 
 #include "llvm/Support/ErrorHandling.h"
 
-#include <cassert>
 #include <iostream>
 
 using namespace tuppence;
@@ -22,23 +21,24 @@ Lexer::Lexer(std::istream &In) :
 	In(In), LastChar('\0') {}
 
 const std::string tuppence::stringFromToken(char Op) {
-	switch (Op) {
-	case tok_error: return "tok_error";
-	case tok_eqeq: return "==";
-	case tok_pp: return "%%";
-	case tok_gtgt: return ">>";
-	case '\n': return "\\n";
-	case EOF: return "EOF";
-	case tok_ddd: return "...";
-	case tok_for: return "tok_for";
-	case tok_beq: return "!=";
-	case tok_identifier: return "tok_identifier";
-	default:
-		if (Op < 0) {
-			llvm_unreachable("Add this token");
-		}
-		return std::string(1, static_cast<char>(Op));
-	}
+    switch (Op) {
+        case tok_error: return "tok_error";
+        case tok_equal_equal: return "==";
+        case tok_percent_percent: return "%%";
+        case tok_greater_greater: return ">>";
+        case '\n': return "\\n";
+        case EOF: return "EOF";
+        case tok_dot_dot_dot: return "...";
+        case tok_for: return "tok_for";
+        case tok_bang_equal: return "!=";
+        case tok_identifier: return "tok_identifier";
+        case tok_star_star: return "**";
+        default:
+            if (Op < 0) {
+                llvm_unreachable("Add this token");
+            }
+            return std::string(1, static_cast<char>(Op));
+    }
 }
 
 const std::string Lexer::currentState() const {
@@ -150,7 +150,7 @@ char Lexer::gettok() {
 		LastChar = nextChar();
 		if (LastChar == '=') {
 			LastChar = nextChar();
-			return tok_eqeq;
+			return tok_equal_equal;
 		}
 		else {
 			return '=';
@@ -161,7 +161,7 @@ char Lexer::gettok() {
 		LastChar = nextChar();
 		if (LastChar == '%') {
 			LastChar = nextChar();
-			return tok_pp;
+			return tok_percent_percent;
 		}
 		else {
 			return '%';
@@ -172,11 +172,11 @@ char Lexer::gettok() {
 		LastChar = nextChar();
 		if (LastChar == '>') {
 			LastChar = nextChar();
-			return tok_gtgt;
+			return tok_greater_greater;
 		}
 		else if (LastChar == '%') {
 			LastChar = nextChar();
-			return tok_gtp;
+			return tok_greater_percent;
 		}
 		else {
 			return '>';
@@ -189,7 +189,7 @@ char Lexer::gettok() {
 			LastChar = nextChar();
 			if (LastChar == '.') {
 				LastChar = nextChar();
-				return tok_ddd;
+				return tok_dot_dot_dot;
 			}
 			else {
 				return LogLexerError("Could not lex: ..");
@@ -204,13 +204,24 @@ char Lexer::gettok() {
 		LastChar = nextChar();
 		if (LastChar == '=') {
 			LastChar = nextChar();
-			return tok_beq;
+			return tok_bang_equal;
 		}
 		else {
 			return '!';
 		}
 	}
 
+    if (LastChar == '*') {
+        LastChar = nextChar();
+        if (LastChar == '*') {
+            LastChar = nextChar();
+            return tok_star_star;
+        }
+        else {
+            return '*';
+        }
+    }
+    
 	if (LastChar == ';') {
 		// Comment until end of line.
 		do

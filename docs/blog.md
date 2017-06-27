@@ -7,6 +7,10 @@ To my Math and CS friends: While I have been adjuncting at the local college, I 
 Check it out, and if you have a HN account, please go to the discussion link.
 
 
+I originally adapted Tuppence from the Kaleidoscope example in the LLVM tutorials, with the intention of using LLVM code gen.
+
+
+
 
 March 11, 2017
 

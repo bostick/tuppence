@@ -9,12 +9,16 @@
 
 #include "Eval.h"
 
+#include "FiniteWord.h"
 #include "Logger.h"
 #include "Parser.h"
+#include "ValueList.h"
 
 #include "llvm/Support/ErrorHandling.h"
+#include "llvm/Support/Casting.h"
 
 #include <iostream>
+#include <cstdlib> // for std::exit
 
 namespace tuppence {
 
@@ -25,9 +29,9 @@ namespace tuppence {
 		const FiniteWord ONE_1BIT = FiniteWord::FactoryBool((bool)1);
 
 		const Symbol SYMBOL_INFINITY = Symbol("infinity");
-		const BuiltinFunction BUILTIN_PRINT = BuiltinFunction(&tuppence::eval::print);
-		const BuiltinFunction BUILTIN_EXIT = BuiltinFunction(&tuppence::eval::exit);
-		const BuiltinFunction BUILTIN_RATIONALIZE = BuiltinFunction(&tuppence::eval::rationalize);
+		const BuiltinFunction BUILTIN_PRINT = BuiltinFunction("print", &tuppence::eval::print);
+		const BuiltinFunction BUILTIN_EXIT = BuiltinFunction("exit", &tuppence::eval::exit);
+		const BuiltinFunction BUILTIN_RATIONALIZE = BuiltinFunction("rationalize", &tuppence::eval::rationalize);
 
 	}
 
@@ -36,6 +40,8 @@ namespace tuppence {
 using namespace tuppence;
 
 std::map<std::string, std::shared_ptr<Value>> eval::NamedValues;
+
+
 
 const std::shared_ptr<Value> ExpressionListExprAST::eval() const {
 	std::vector<std::shared_ptr<Value>> Vals;
@@ -119,7 +125,7 @@ const std::shared_ptr<Value> UnaryExprAST::eval() const {
 		}
 		return LogError("Invalid type for operator -: " + stringFromValueKind(OperandValue->getKind()));
 	}
-	case tok_ddd: {
+	case tok_dot_dot_dot: {
 		if (auto FiniteWordOperand = llvm::dyn_cast<FiniteWord>(OperandValue.get())) {
 			if (FiniteWordOperand->getSize() == 0) {
 				return std::make_shared<FiniteWord>();
@@ -274,7 +280,7 @@ const std::shared_ptr<Value> BinaryExprAST::eval() const {
 	}
 
 	switch (Op) {
-	case tok_pp: {
+	case tok_percent_percent: {
 		if (auto RationalWordL = llvm::dyn_cast<RationalWord>(L.get())) {
 			if (auto RationalWordR = llvm::dyn_cast<RationalWord>(R.get())) {
 				if (!RationalWordR->isNonNegativeInteger()) {
@@ -307,7 +313,7 @@ const std::shared_ptr<Value> BinaryExprAST::eval() const {
 		}
 		return LogError("Incorrect types for %%: " + L->string() + " " + R->string());
 	}
-	case tok_gtgt: {
+	case tok_greater_greater: {
 		if (auto RationalWordL = llvm::dyn_cast<RationalWord>(L.get())) {
 			if (auto RationalWordR = llvm::dyn_cast<RationalWord>(R.get())) {
 				if (!RationalWordR->isNonNegativeInteger()) {
@@ -331,7 +337,7 @@ const std::shared_ptr<Value> BinaryExprAST::eval() const {
 		}
 		return LogError("Incorrect types for >>: " + L->string() + " " + R->string());
 	}
-	case tok_gtp: {
+	case tok_greater_percent: {
 		if (auto RationalWordL = llvm::dyn_cast<RationalWord>(L.get())) {
 			if (auto RationalWordR = llvm::dyn_cast<RationalWord>(R.get())) {
 				if (!RationalWordR->isNonNegativeInteger()) {
@@ -428,6 +434,21 @@ const std::shared_ptr<Value> BinaryExprAST::eval() const {
 			return LogError("Invalid types for /: " + L->string() + " " + R->string());
 		}
 	}
+        case tok_star_star: {
+            if (auto RationalWordL = llvm::dyn_cast<RationalWord>(L.get())) {
+                if (auto FiniteWordR = llvm::dyn_cast<FiniteWord>(R.get())) {
+                    auto i = RationalWordL->getUInt64Value();
+                    return std::make_shared<FiniteWord>(FiniteWord::FactoryRepsWord(i, *FiniteWordR));
+                }
+            } else if (auto SymbolL = llvm::dyn_cast<Symbol>(L.get())) {
+                if (auto FiniteWordR = llvm::dyn_cast<FiniteWord>(R.get())) {
+                    if (*SymbolL == eval::SYMBOL_INFINITY) {
+                        return std::make_shared<RationalWord>(RationalWord::FactoryPeriodTransient(*FiniteWordR, finiteword::EMPTY));
+                    }
+                }
+            }
+            return LogError("Incorrect types for **: " + L->string() + " " + R->string());
+        }
 	default:
 		return LogError("Binary operator not found: " + stringFromToken(Op));
 	}
@@ -444,7 +465,7 @@ const std::shared_ptr<Value> InfixExprAST::eval() const {
 		Vals.push_back(Val);
 	}
 
-	if (Op == tok_eqeq || Op == tok_beq) {
+	if (Op == tok_equal_equal || Op == tok_bang_equal) {
 		// == and != operators are special, if any word values are present, then only consider
 		// the first element of any lists
 		// if all arguments are lists, then compare element-wise
@@ -496,8 +517,8 @@ const std::shared_ptr<Value> InfixExprAST::eval() const {
 			}
 
 			switch (Op) {
-			case tok_eqeq: return std::make_shared<FiniteWord>(FiniteWord::equal(FiniteWordVals));
-			case tok_beq: return std::make_shared<FiniteWord>(FiniteWord::notequal(FiniteWordVals));
+			case tok_equal_equal: return std::make_shared<FiniteWord>(FiniteWord::equal(FiniteWordVals));
+			case tok_bang_equal: return std::make_shared<FiniteWord>(FiniteWord::notequal(FiniteWordVals));
 			default:
 				llvm_unreachable("fallthrough");
 			}
@@ -522,8 +543,8 @@ const std::shared_ptr<Value> InfixExprAST::eval() const {
 			}
 
 			switch (Op) {
-			case tok_eqeq: return std::make_shared<FiniteWord>(RationalWord::equal(RationalWordVals));
-			case tok_beq: return std::make_shared<FiniteWord>(RationalWord::notequal(RationalWordVals));
+			case tok_equal_equal: return std::make_shared<FiniteWord>(RationalWord::equal(RationalWordVals));
+			case tok_bang_equal: return std::make_shared<FiniteWord>(RationalWord::notequal(RationalWordVals));
 			default:
 				llvm_unreachable("fallthrough");
 			}
@@ -549,8 +570,8 @@ const std::shared_ptr<Value> InfixExprAST::eval() const {
 			}
 
 			switch (Op) {
-			case tok_eqeq: return std::make_shared<FiniteWord>(ValueList::equal(ValueListVals));
-			case tok_beq: return std::make_shared<FiniteWord>(ValueList::notequal(ValueListVals));
+			case tok_equal_equal: return std::make_shared<FiniteWord>(ValueList::equal(ValueListVals));
+			case tok_bang_equal: return std::make_shared<FiniteWord>(ValueList::notequal(ValueListVals));
 			default:
 				llvm_unreachable("fallthrough");
 			}
@@ -610,7 +631,9 @@ const std::shared_ptr<Value> InfixExprAST::eval() const {
 			for (auto& Val : Vals) {
 				if (auto FiniteWordVal = llvm::dyn_cast<FiniteWord>(Val.get())) {
 					if (FiniteWordVal->getSize() != finiteWordSize) {
-						return LogError("Invalid size: " + Val->string());
+                        return LogError("Expected FiniteWord with size " + std::to_string(finiteWordSize) +
+                                        ", but found FiniteWord with size " + std::to_string(FiniteWordVal->getSize()) +
+                                        ": " + Val->string());
 					}
 					FiniteWordVals.push_back(*FiniteWordVal);
 				}
@@ -852,10 +875,11 @@ const std::shared_ptr<Value> VarExprAST::eval() const {
 }
 
 const std::shared_ptr<Value> DefinitionAST::eval() const {
-
-	auto F = std::make_shared<UserFunction>(Proto, Body);
+    
+    auto name = Proto->getName()->getName();
+	auto F = std::make_shared<UserFunction>(name, Proto, Body);
 	
-	eval::NamedValues[Proto->getName()->getName()] = F;
+	eval::NamedValues[name] = F;
 
 	return std::make_shared<FiniteWord>();
 }

@@ -7,14 +7,11 @@
 //
 //===----------------------------------------------------------------------===//
 
-#ifndef TUPPENCE_EVAL_H
-#define TUPPENCE_EVAL_H
+#pragma once
 
 #include "Value.h"
-#include "ValueList.h"
 
-#include <memory>
-#include <vector>
+#include <map>
 
 namespace tuppence {
 
@@ -38,5 +35,3 @@ namespace tuppence {
 		extern const BuiltinFunction BUILTIN_RATIONALIZE;
 	}
 }
-
-#endif

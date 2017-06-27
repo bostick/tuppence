@@ -10,6 +10,8 @@
 #include "Value.h"
 
 #include <cassert>
+#include <cstddef> // for size_t
+#include <string>
 
 using namespace tuppence;
 
@@ -28,11 +30,11 @@ const std::string tuppence::stringFromValueKind(Value::ValueKind Kind) {
 }
 
 const std::string BuiltinFunction::string() const {
-	return "<BuiltinFunction>";
+	return "<BuiltinFunction:" + Name + ">";
 }
 
 const std::string UserFunction::string() const {
-	return "<UserFunction>";
+	return "<UserFunction:" + Name + ">";
 }
 
 const bool Symbol::operator==(const Symbol other) const {

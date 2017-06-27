@@ -12,9 +12,7 @@
 #include "Logger.h"
 
 #include "llvm/Support/ErrorHandling.h"
-
-#include <cassert>
-#include <iostream>
+#include "llvm/Support/Casting.h"
 
 using namespace tuppence;
 
@@ -22,20 +20,24 @@ Parser::Parser(std::istream &In) :
 	Lex(Lexer(In)) {
 	// 1 is lowest precedence.
 	BinopPrecedence['='] = 3;
-	BinopPrecedence[tok_pp] = 4;
+	BinopPrecedence[tok_percent_percent] = 4;
 
 	BinopPrecedence['|'] = 7;
 	BinopPrecedence['^'] = 8;
 	BinopPrecedence['&'] = 9;
-	BinopPrecedence[tok_eqeq] = 10;
-	BinopPrecedence[tok_beq] = 10;
-	BinopPrecedence[tok_gtgt] = 19;
-	BinopPrecedence[tok_gtp] = 19;
+	BinopPrecedence[tok_equal_equal] = 10;
+	BinopPrecedence[tok_bang_equal] = 10;
+	BinopPrecedence[tok_greater_greater] = 19;
+	BinopPrecedence[tok_greater_percent] = 19;
 	BinopPrecedence['+'] = 20;
 	BinopPrecedence['-'] = 20;
+        
 	BinopPrecedence['*'] = 40;
 	BinopPrecedence['/'] = 40;
+        
 	BinopPrecedence['#'] = 50;
+	BinopPrecedence[tok_star_star] = 50;
+        
 	BinopPrecedence['.'] = 60;
 	// highest.
 }
@@ -423,7 +425,7 @@ const std::shared_ptr<ExprAST> Parser::ParseUnary() {
 		return Res;
 	}
 	case '-':
-	case tok_ddd:
+	case tok_dot_dot_dot:
 	case '~': {
 		// If this is a unary operator, read it.
 		auto Opc = Lex.CurTok;
@@ -445,9 +447,9 @@ const std::shared_ptr<ExprAST> Parser::ParseUnary() {
 	case '&':
 	case '|':
 	case '^':
-	case tok_gtgt:
-	case tok_gtp:
-	case tok_pp:
+	case tok_greater_greater:
+	case tok_greater_percent:
+	case tok_percent_percent:
 		return LogError(stringFromToken(Lex.CurTok) + " is a binary operator");
 	case tok_error:
 		return nullptr;
@@ -467,7 +469,7 @@ const std::shared_ptr<ExprAST> Parser::ParseBinOpRHS(int ExprPrec, std::shared_p
 		}
 		int TokPrec = GetTokPrecedence();
 		if (TokPrec == -1) {
-			return LogError("bad operator: " + Lex.currentState());
+			return LogError("Unrecognized operator: " + Lex.currentState());
 		}
 		// If this is a binop that binds at least as tightly as the current binop,
 		// consume it, otherwise we are done.
@@ -496,7 +498,7 @@ const std::shared_ptr<ExprAST> Parser::ParseBinOpRHS(int ExprPrec, std::shared_p
 		}
 		int NextPrec = GetTokPrecedence();
 		if (NextPrec == -1) {
-			return LogError("bad operator: " + Lex.currentState());
+			return LogError("Unrecognized operator: " + Lex.currentState());
 		}
 		if (TokPrec < NextPrec) {
 			RHS = ParseBinOpRHS(TokPrec + 1, RHS);
@@ -511,8 +513,8 @@ const std::shared_ptr<ExprAST> Parser::ParseBinOpRHS(int ExprPrec, std::shared_p
 		case '#':
 		case '+':
 		case '*':
-		case tok_eqeq:
-		case tok_beq:
+		case tok_equal_equal:
+		case tok_bang_equal:
 		case '&':
 		case '|':
 		case '^': {

@@ -8,8 +8,11 @@
 //===----------------------------------------------------------------------===//
 
 #include "Parser.h"
+#include "Interpreter.h"
 
 #include "gtest/gtest.h"
+
+#include "llvm/Support/Casting.h"
 
 using namespace tuppence;
 
@@ -26,7 +29,7 @@ TEST(Eval, Test1) {
 		auto Val = llvm::dyn_cast<FiniteWord>(Evaled.get());
 		ASSERT_TRUE(Val != nullptr);
 
-		EXPECT_EQ("`11011`", Val->representation());
+		EXPECT_EQ("`11011`", Val->string());
 	}
 
 	{
@@ -40,12 +43,12 @@ TEST(Eval, Test1) {
 		auto Val = llvm::dyn_cast<RationalWord>(Evaled.get());
 		ASSERT_TRUE(Val != nullptr);
 
-		EXPECT_EQ("0'11011", Val->representation());
+		EXPECT_EQ("27", Val->string());
 
 		auto Nine = std::make_shared<RationalWord>(RationalWord::FactoryString("9"));
 
 		auto Res = Val->residue(*Nine->getTransient().getRawData());
-		EXPECT_EQ("`000011011`", Res.representation());
+		EXPECT_EQ("`000011011`", Res.string());
 	}
 
 	{
@@ -62,7 +65,7 @@ TEST(Eval, Test1) {
 		auto Val = llvm::dyn_cast<RationalWord>(Evaled.get());
 		ASSERT_TRUE(Val != nullptr);
 
-		EXPECT_EQ("0'11011", Val->representation());
+		EXPECT_EQ("27", Val->string());
 	}
 
 	// Eval code
@@ -182,4 +185,32 @@ TEST(Eval, MissingNames) {
 		// Error: Neither builtin function nor user function: a
 		ASSERT_TRUE(Evaled2 == nullptr);
 	}
+}
+
+TEST(Eval, StarStar) {
+    
+    {
+        std::stringstream ss("3 ** `1`\n");
+        Parser P(ss);
+        P.readNextToken();
+        auto E = P.ParseTopLevelExpression();
+        ASSERT_TRUE(E != nullptr);
+        auto Expr = llvm::dyn_cast<BinaryExprAST>(E.get());
+        ASSERT_TRUE(Expr != nullptr);
+        EXPECT_EQ(Expr->getOp(), tok_star_star);
+        auto Evaled = Expr->eval();
+        ASSERT_TRUE(Evaled != nullptr);
+        auto Val = llvm::dyn_cast<FiniteWord>(Evaled.get());
+        ASSERT_TRUE(Val != nullptr);
+        
+        EXPECT_EQ("`111`", Val->string());
+    }
+    
+    {
+        std::stringstream ss("infinity ** `1`\n");
+        Interpreter I(ss);
+        auto Evaled = I.eval();
+        ASSERT_TRUE(Evaled != nullptr);
+        EXPECT_EQ("-1", Evaled->string());
+    }
 }

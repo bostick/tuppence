@@ -7,13 +7,10 @@
 //
 //===----------------------------------------------------------------------===//
 
-#ifndef TUPPENCE_VALUE_H
-#define TUPPENCE_VALUE_H
+#pragma once
 
-#include <map>
 #include <memory>
 #include <string>
-#include <vector>
 
 namespace tuppence {
 
@@ -47,12 +44,13 @@ namespace tuppence {
 	const std::string stringFromValueKind(Value::ValueKind);
 
 	class UserFunction : public Value {
+        const std::string Name;
 		const std::shared_ptr<PrototypeAST> Proto;
 		const std::shared_ptr<ExprAST> Body;
 
 	public:
-		UserFunction(const std::shared_ptr<PrototypeAST> Proto, const std::shared_ptr<ExprAST> Body) :
-			Value(VK_UserFunction), Proto(Proto), Body(Body) {}
+		UserFunction(std::string Name, const std::shared_ptr<PrototypeAST> Proto, const std::shared_ptr<ExprAST> Body) :
+			Value(VK_UserFunction), Name(Name), Proto(Proto), Body(Body) {}
 
 		const std::shared_ptr<Value> call(std::vector<std::shared_ptr<Value>> Args) const;
 
@@ -67,11 +65,12 @@ namespace tuppence {
 	};
 
 	class BuiltinFunction : public Value {
+        const std::string Name;
 		const std::shared_ptr<Value>(*FunctionPointer)(std::vector<std::shared_ptr<Value>>);
 
 	public:
-		BuiltinFunction(const std::shared_ptr<Value>(*FunctionPointer)(std::vector<std::shared_ptr<Value>>)) :
-			Value(VK_BuiltinFunction), FunctionPointer(FunctionPointer) {}
+		BuiltinFunction(std::string Name, const std::shared_ptr<Value>(*FunctionPointer)(std::vector<std::shared_ptr<Value>>)) :
+			Value(VK_BuiltinFunction), Name(Name), FunctionPointer(FunctionPointer) {}
 
 		const std::shared_ptr<Value> call(std::vector<std::shared_ptr<Value>> Args) const;
 
@@ -116,5 +115,3 @@ namespace tuppence {
 
 	const size_t bitLength(size_t);
 }
-
-#endif

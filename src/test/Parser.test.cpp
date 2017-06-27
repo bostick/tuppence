@@ -11,6 +11,8 @@
 
 #include "gtest/gtest.h"
 
+#include "llvm/Support/Casting.h"
+
 using namespace tuppence;
 
 TEST(Parser, Test1) {
