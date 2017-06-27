@@ -11,6 +11,8 @@
 
 #include "FiniteWord.h"
 
+#include <vector>
+
 namespace tuppence {
 
 	class RationalWord : public Value {

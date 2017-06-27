@@ -12,6 +12,7 @@
 #include "Value.h"
 
 #include <map>
+#include <vector>
 
 namespace tuppence {
 
