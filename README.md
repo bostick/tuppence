@@ -97,7 +97,7 @@ Indexing occurs right-to-left. Evaluation of lists occurs right-to-left.
 
 Where it makes sense, information is processed right-to-left. Exceptions include the spelling of English keywords and functions of the language ( would `tnirp` be acceptable for a function name? ), function application ( `(1)print` would be too strange) and operators like `/` and `-` ( Writing `3\1` would be too strange for representing the fraction one-third. )
 
-Traditionally, when adding 32-bit or 64-bit integers, the carry bit is lost. Tuppence propagates the carry bit for later use.
+Traditionally in other programming langauges, when adding 32-bit or 64-bit integers, the carry bit is lost. Tuppence propagates the carry bit for later use.
 
 ```
 >>> `1` + `1`
@@ -106,106 +106,6 @@ Traditionally, when adding 32-bit or 64-bit integers, the carry bit is lost. Tup
 
 Similarly with multiplication, when multiplying 2 n-bit words, the result is a list with 2 n-bit elements.
 
-## Language
-
-Values in Tuppence are immutable.
-
-`%%` is the residue operator. It allows you to extract a finite number of bits from a rational number.
-
-```
->>> 1/3 %% 20
-`10101010101010101011`
-```
-
-#### Arithmetic operations
-
-`+` and `-` return Lists with 2 elements. The first element of the result has the same bit width as the operands. The second element is the carry (or borrow) and is the size needed to represent the maximum possibly carry (or borrow).
-
-`*` returns a List with 2 elements. Both elements are the same width as the operands, and both elements together represent the complete product of the operands.
-
-`/` returns a List with 2 elements, i.e., (Remainder, Quotient)
-
-#### Bitwise operations
-
-The operators `&`, `|`, and `^` represent the traditional bitwise operators for `and`, `or`, and `xor`, respectively. The notation was popularized by the C programming language.
-
-## Evaluation rules
-
-Operations like `+` and `*` return a list of values.
-
-```
->>> `1` + `1`
-(`1`, `0`)
-```
-
-But, if lists are an intermediate result of evaluation, they are usually concatenated together.
-
-```
->>> (`1` + `1`) * `11`
-(`01`, `10`)
-```
-The intermediate result of `` `1` + `1` `` is `` (`1`, `0`) ``, but it is concatenated to `` `10` `` before being multiplied with `` `11` ``.
-
-
-### Assignment
-
-A list of identifiers can be a LHS and it will bind the corresponding values on the RHS list. Any extra elements on the RHS are not assigned to a variable. This allowed writing the code ``x = `1` + `1` `` to work as expected, i.e., `x` is assigned `0`. But you can also write ``(c, x) = `1` + `1` `` if you wish to also keep track of the carry.
-
-
-
-### Examples
-
-It is a property of 2-adic numbers that they must start with `001` in order to have a square root. Let's find the square root of 17, which is `10001` in binary.
-
-```
-; sqrt.2p
-; Brenton Bostick
-; Square Root of 17 in Tuppence
-;
-; initial guess of 1
-guess = 1
-; Newton's Method
-guess = (guess + 17/guess) >> 1
-print(guess)
-guess = (guess + 17/guess) >> 1
-print(guess)
-guess = (guess + 17/guess) >> 1
-print(guess)
-guess = (guess + 17/guess) >> 1
-print(guess)
-guess = (guess + 17/guess) >> 1
-print(guess)
-
-; print guess as integer with 100 bits of precision
-print(0 # (guess %% 100))
-
-; print result as integer with 100 bits of precision
-result = guess * guess
-print(0 # (result %% 100))
-```
-
-And if we run the interpreter with this file:
-
-```
-./tuppence.exe sqrt.2p
-9
-49/9
-1889/441
-3437249/833049
-Warning: Loop limit exceeded in RationalWord divide. Returning truncated result. Loop limit is: 1000
-3526299271737049901142489188064762452771618484675801833747781042574412567139404581266443855599402418586554728091093092889940241552756633570817371360792679954999464735144547873671925392914561568751203486508447435984639721081511658824706088313577043771350752808234845312735541844167512127491844406685816091329/833049
-Warning: Loop limit exceeded in RationalWord divide. Returning truncated result. Loop limit is: 1000
-1990313625524614549424364567010171681910560013052581941814155397945006558578945406256220214929938179709836283596602702628927511002443863124929448389577151524995890102899552055223683766691867151573000720401828645206417256180613135585469867360297289228689905093033409343704317280587576819335923647992097436353/833049
-1049862217672007560153128969961
-Warning: Loop limit exceeded in RationalWord multiply. Returning truncated result. Loop limit is: 1000
-17
-```
-
-The warnings indicate that it took more than 1000 iterations to get an answer inside of the code for dividing and multiplying. The guesses that are printed have been truncated to 1000 digits of precision. It is especially easy to generate fractions with enormous numerators and denominators in Tuppence and I will be working on methods for managing this complexity.
-
-So we can see in terms of 100-bit unsigned integers, 1049862217672007560153128969961 is the square root of 17.
-
-Pretty cool, huh?
 
 ## Why the name *Tuppence*?
 
@@ -214,19 +114,6 @@ Tuppence is British slang for "two pence" <a href="https://en.wikipedia.org/wiki
 
 
 
-## Building Instructions
-
-Tuppence uses CMake to generate project files.
-
-Open CMake and set the source code location to tuppence/src. It is recommended to set the build directory to tuppence/build.
-
-Then Configure and Generate. The tuppence project is the interpreter and the test project builds an executable named runUnitTests for running the GTest tests for Tuppence.
-
-If you are using Visual Studio and get an error `gtest.lib(gtest-all.obj) : error LNK2038: mismatch detected for 'RuntimeLibrary': value 'MTd_StaticDebug' doesn't match value 'MDd_DynamicDebug'`, make sure to check the gtest > gtest_force_shared_crt option in CMake.
-
-## Future work
-
-Jupyter kernel, Finite Field arithmetic, crit-bit trees, BDDs (binary decision diagrams).
 
 
 

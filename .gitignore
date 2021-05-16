@@ -1,4 +1,7 @@
 
 build
+build-xcode
 
 .DS_Store
+
+.ipynb_checkpoints

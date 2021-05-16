@@ -1,12 +1,15 @@
 project(runUnitTests)
 
-# find the generated LLVM headers
-include_directories("${CMAKE_CURRENT_BINARY_DIR}/../llvm-minimal/include")
+find_package(LLVM REQUIRED CONFIG)
+find_package(GTest REQUIRED)
 
 enable_testing()
 
-include_directories("../llvm-minimal/include")
-include_directories("../tuppence/")
+# include tuppence/ dir
+include_directories("..")
+
+include_directories(${LLVM_INCLUDE_DIRS})
+add_definitions(${LLVM_DEFINITIONS})
 
 # Add test cpp file
 add_executable(runUnitTests
@@ -18,7 +21,7 @@ add_executable(runUnitTests
 )
 
 # Link test executable against gtest & gtest_main
-target_link_libraries(runUnitTests tuppencelib gtest gtest_main)
+target_link_libraries(runUnitTests tuppence GTest::GTest GTest::Main)
 
 add_test(
     NAME runUnitTests
@@ -27,3 +30,5 @@ add_test(
 
 set_property(TARGET runUnitTests PROPERTY CXX_STANDARD 11)
 set_property(TARGET runUnitTests PROPERTY CXX_STANDARD_REQUIRED ON)
+
+set(CMAKE_CXX_FLAGS "-fno-rtti")

@@ -7,7 +7,7 @@
 //
 //===----------------------------------------------------------------------===//
 
-#include "RationalWord.h"
+#include "tuppence/RationalWord.h"
 
 #include "gtest/gtest.h"
 
@@ -33,7 +33,7 @@ namespace tuppence {
 		RationalWord NINETEEN_OVER_SEVEN;
 		RationalWord FIVE_OVER_NINETEEN;
 		RationalWord TWENTYTHREE_OVER_THREE;
-		RationalWord FIVE_OVER_TWENTRYTHREE;
+		RationalWord FIVE_OVER_TWENTYTHREE;
 		RationalWord TWENTYTHREE_OVER_SEVEN;
 		RationalWord ONE_OVER_TWOHUNDREDNINETEEN;
 		RationalWord ONE_OVER_TENTHOUSANDONE;
@@ -71,7 +71,7 @@ protected:
 		rationalword::NINETEEN_OVER_SEVEN = rationalword::NINETEEN / rationalword::SEVEN;
 		rationalword::FIVE_OVER_NINETEEN = rationalword::FIVE / rationalword::NINETEEN;
 		rationalword::TWENTYTHREE_OVER_THREE = rationalword::TWENTYTHREE / rationalword::THREE;
-		rationalword::FIVE_OVER_TWENTRYTHREE = rationalword::FIVE / rationalword::TWENTYTHREE;
+		rationalword::FIVE_OVER_TWENTYTHREE = rationalword::FIVE / rationalword::TWENTYTHREE;
 		rationalword::TWENTYTHREE_OVER_SEVEN = rationalword::TWENTYTHREE / rationalword::SEVEN;
 		rationalword::ONE_OVER_TWOHUNDREDNINETEEN = rationalword::ONE / rationalword::TWOHUNDREDNINETEEN;
 		rationalword::ONE_OVER_TENTHOUSANDONE = rationalword::ONE / rationalword::TENTHOUSANDONE;
@@ -95,11 +95,11 @@ TEST_F(RationalWordTest, multiply) {
 	
 	EXPECT_EQ("5/7", (rationalword::FIVE_OVER_NINETEEN * rationalword::NINETEEN_OVER_SEVEN).decimal());
 	
-	EXPECT_EQ("5/3", (rationalword::TWENTYTHREE_OVER_THREE * rationalword::FIVE_OVER_TWENTRYTHREE).decimal());
+	EXPECT_EQ("5/3", (rationalword::TWENTYTHREE_OVER_THREE * rationalword::FIVE_OVER_TWENTYTHREE).decimal());
 	
-	EXPECT_EQ("5/7", (rationalword::TWENTYTHREE_OVER_SEVEN * rationalword::FIVE_OVER_TWENTRYTHREE).decimal());
+	EXPECT_EQ("5/7", (rationalword::TWENTYTHREE_OVER_SEVEN * rationalword::FIVE_OVER_TWENTYTHREE).decimal());
 	
-	EXPECT_EQ("5/7", (rationalword::FIVE_OVER_TWENTRYTHREE * rationalword::TWENTYTHREE_OVER_SEVEN).decimal());
+	EXPECT_EQ("5/7", (rationalword::FIVE_OVER_TWENTYTHREE * rationalword::TWENTYTHREE_OVER_SEVEN).decimal());
 	
 	EXPECT_EQ("1", (rationalword::ONE_OVER_TWOHUNDREDNINETEEN * rationalword::TWOHUNDREDNINETEEN).decimal());
 	
@@ -136,13 +136,24 @@ TEST_F(RationalWordTest, divide) {
 
 	EXPECT_EQ("23/3", rationalword::TWENTYTHREE_OVER_THREE.decimal());
 
-	EXPECT_EQ("5/23", rationalword::FIVE_OVER_TWENTRYTHREE.decimal());
+	EXPECT_EQ("5/23", rationalword::FIVE_OVER_TWENTYTHREE.decimal());
 
 	EXPECT_EQ("23/7", rationalword::TWENTYTHREE_OVER_SEVEN.decimal());
 
 	EXPECT_EQ("1/219", rationalword::ONE_OVER_TWOHUNDREDNINETEEN.decimal());
 
 	EXPECT_EQ("1/10001", rationalword::ONE_OVER_TENTHOUSANDONE.decimal());
+}
+
+TEST_F(RationalWordTest, quotientRemainder) {
+
+	auto Val = Interpreter("1/%3");
+
+	EXPECT_EQ("(0, 1)", Val.string());
+
+	Val = Interpreter("(2/3)/%(1/5)");
+
+	EXPECT_EQ("(3, 1/15)", Val.string());
 }
 
 TEST_F(RationalWordTest, unequal) {

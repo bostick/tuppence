@@ -7,7 +7,7 @@
 //
 //===----------------------------------------------------------------------===//
 
-#include "Value.h"
+#include "tuppence/Value.h"
 
 #include "gtest/gtest.h"
 

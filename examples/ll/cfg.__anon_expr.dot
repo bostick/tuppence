@@ -1,0 +1,22 @@
+digraph "CFG for '__anon_expr' function" {
+	label="CFG for '__anon_expr' function";
+
+	Node0x7fe76f703090 [shape=record,label="{entry:\l  %createFiniteWord = call %opaque.FiniteWord*\l... @FiniteWord_createFromBinaryString(i64 1, i8* getelementptr inbounds ([2 x\l... i8], [2 x i8]* @finiteWordString, i64 0, i64 0))\l  %createValue = call %struct.Value*\l... @Value_createFromFiniteWord(%opaque.FiniteWord* %createFiniteWord)\l  %2 = getelementptr %struct.Value, %struct.Value* %createValue, i32 0, i32 0\l  %3 = load i8, i8* %2\l  %4 = icmp eq i8 %3, 2\l  br i1 %4, label %type_good, label %type_bad\l|{<s0>T|<s1>F}}"];
+	Node0x7fe76f703090:s0 -> Node0x7fe76f704220;
+	Node0x7fe76f703090:s1 -> Node0x7fe76f7030d0;
+	Node0x7fe76f7030d0 [shape=record,label="{type_bad:                                         \l  %createValue1 = call %struct.Value* @Value_createFromError(i8* getelementptr\l... inbounds ([23 x i8], [23 x i8]* @errorString, i64 0, i64 0))\l  br label %merge\l}"];
+	Node0x7fe76f7030d0 -> Node0x7fe76f704360;
+	Node0x7fe76f704220 [shape=record,label="{type_good:                                        \l  %5 = getelementptr %struct.Value, %struct.Value* %createValue, i32 0, i32 1\l  %6 = load i8*, i8** %5\l  %7 = bitcast i8* %6 to %opaque.FiniteWord*\l  %size = call i64 @FiniteWord_size(%opaque.FiniteWord* %7)\l  %8 = icmp eq i64 %size, 1\l  br i1 %8, label %size_good, label %size_bad\l|{<s0>T|<s1>F}}"];
+	Node0x7fe76f704220:s0 -> Node0x7fe76f7042a0;
+	Node0x7fe76f704220:s1 -> Node0x7fe76f704260;
+	Node0x7fe76f704260 [shape=record,label="{size_bad:                                         \l  %createValue2 = call %struct.Value* @Value_createFromError(i8* getelementptr\l... inbounds ([35 x i8], [35 x i8]* @errorString.1, i64 0, i64 0))\l  br label %merge\l}"];
+	Node0x7fe76f704260 -> Node0x7fe76f704360;
+	Node0x7fe76f7042a0 [shape=record,label="{size_good:                                        \l  %bit = call i8 @FiniteWord_getBit(%opaque.FiniteWord* %7, i64 0)\l  %9 = icmp eq i8 %bit, 1\l  br i1 %9, label %cond_true, label %cond_false\l|{<s0>T|<s1>F}}"];
+	Node0x7fe76f7042a0:s0 -> Node0x7fe76f7042e0;
+	Node0x7fe76f7042a0:s1 -> Node0x7fe76f704320;
+	Node0x7fe76f7042e0 [shape=record,label="{cond_true:                                        \l  %calltmp = call %opaque.RationalWord*\l... @RationalWord_createFromDecimalString(i8* getelementptr inbounds ([2 x i8],\l... [2 x i8]* @integerString, i64 0, i64 0))\l  %calltmp3 = call %struct.Value*\l... @Value_createFromRationalWord(%opaque.RationalWord* %calltmp)\l  br label %merge\l}"];
+	Node0x7fe76f7042e0 -> Node0x7fe76f704360;
+	Node0x7fe76f704320 [shape=record,label="{cond_false:                                       \l  %calltmp4 = call %opaque.RationalWord*\l... @RationalWord_createFromDecimalString(i8* getelementptr inbounds ([2 x i8],\l... [2 x i8]* @integerString.2, i64 0, i64 0))\l  %calltmp5 = call %struct.Value*\l... @Value_createFromRationalWord(%opaque.RationalWord* %calltmp4)\l  br label %merge\l}"];
+	Node0x7fe76f704320 -> Node0x7fe76f704360;
+	Node0x7fe76f704360 [shape=record,label="{merge:                                            \l  %iftmp = phi %struct.Value* [ %createValue1, %type_bad ], [ %createValue2,\l... %size_bad ], [ %calltmp3, %cond_true ], [ %calltmp5, %cond_false ]\l  ret %struct.Value* %iftmp\l}"];
+}

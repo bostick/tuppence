@@ -1,0 +1,34 @@
+
+march 2 2019
+
+
+there is so much churn with the ORC API
+
+it is still very much in flux.
+
+
+Decide to stick with LLVM 6 until all of the design effort with ORC is settled
+
+
+
+
+
+
+
+march 11, 2019
+
+
+
+http://lists.llvm.org/pipermail/cfe-dev/2019-March/061554.html
+The "elevator pitch" is that we expose the iN LLVM-IR integer types in Clang such that a sufficiently motivated code generator could take advantage of the smaller sizes.  This is particularly useful for FPGAs, though I'd imagine other users are around.
+
+
+
+So I wonder how Tuppence could take advantage of this?
+
+
+
+
+
+
+

@@ -4,6 +4,7 @@
 ;
 ; initial guess of 1
 guess = 1
+print(guess)
 ; Newton's Method
 guess = (guess + 17/guess) >> 1
 print(guess)
